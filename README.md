@@ -1,7 +1,7 @@
 caffe_bar_sales_analysis
 ==============================
 
-Project for figuring out the possible ways in which machine learning can benefit the drinks sales industry.
+Project for figuring out the possible ways in which machine learning can benefit the drinks retail sales.
 
 Project Organization
 ------------
