@@ -1,2 +1,5 @@
 ###Forecasting principles and practice
 https://otexts.com/fpp2/toolbox.html
+
+###Pip install the package in editable state (for import src)
+https://stackoverflow.com/questions/714063/importing-modules-from-parent-folder
