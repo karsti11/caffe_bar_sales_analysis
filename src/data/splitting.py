@@ -2,15 +2,18 @@ import pandas as pd
 import itertools
 
 def split_dataset(all_data_df: pd.DataFrame, 
-                  validation_split_date: str, 
+                  test_split_date: str, 
                   independent_vars: list, 
                   dependent_var: str):
-    X_train = all_data_df[all_data_df.index < pd.to_datetime(validation_split_date, utc=True)][independent_vars].copy()
-    X_test = all_data_df[all_data_df.index >= pd.to_datetime(validation_split_date, utc=True)][independent_vars].copy()
-    y_train = all_data_df[all_data_df.index < pd.to_datetime(validation_split_date, utc=True)][dependent_var].copy()
-    y_test = all_data_df[all_data_df.index >= pd.to_datetime(validation_split_date, utc=True)][dependent_var].copy()
+    """Split dataset by date. 
+    First date of test is test_split_date.
+    """
+    X_train = all_data_df[all_data_df.index < pd.to_datetime(test_split_date, utc=True)][independent_vars].copy()
+    X_test = all_data_df[all_data_df.index >= pd.to_datetime(test_split_date, utc=True)][independent_vars].copy()
+    y_train = all_data_df[all_data_df.index < pd.to_datetime(test_split_date, utc=True)][dependent_var].copy()
+    y_test = all_data_df[all_data_df.index >= pd.to_datetime(test_split_date, utc=True)][dependent_var].copy()
     print(f"Train dataset is from {X_train.index.min().strftime('%Y-%m-%d')} to {X_train.index.max().strftime('%Y-%m-%d')}")
-    print(f"Validation dataset is from {X_test.index.min().strftime('%Y-%m-%d')} to {X_test.index.max().strftime('%Y-%m-%d')}")
+    print(f"Test dataset is from {X_test.index.min().strftime('%Y-%m-%d')} to {X_test.index.max().strftime('%Y-%m-%d')}")
     return X_train, X_test, y_train, y_test
 
 def time_series_cv(raw_data_filled_df, num_train_years):

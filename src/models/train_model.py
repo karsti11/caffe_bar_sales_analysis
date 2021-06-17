@@ -1,9 +1,10 @@
+import os
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression, Ridge
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import make_scorer
-from src.features.build_features import add_features_to_raw_data, fill_time_series
+from src.features.build_features import add_calendar_features, add_holidays_features, fill_time_series
 from src.data.data_loader import load_data
 from src.evaluation.metrics import wmape
 from src.data.splitting import split_dataset, time_series_cv
@@ -103,8 +104,9 @@ def transform_and_fit_gridsearch(
     item_name = raw_data_df.item_name.unique()[0]
     print(f"Executing transform and gridsearch fit for {item_name} ...")
     data_filled = fill_time_series(raw_data_df.copy())
-    data_w_feats = add_features_to_raw_data(data_filled)
-    X_train, X_test, y_train, y_test = split_dataset(data_w_feats, validation_split_date, independent_vars, dependent_var)
+    dataset_df = add_calendar_features(data_filled)
+    dataset_df = add_holidays_features(dataset_df)
+    X_train, X_test, y_train, y_test = split_dataset(dataset_df, validation_split_date, independent_vars, dependent_var)
     cv_split_idxs = time_series_cv(X_train, num_train_years=3)
     wmape_scorer = make_scorer(wmape, greater_is_better=False)
     grid_search_params = {'alpha': [0.01, 0.1, 1.0, 10, 100]}
@@ -151,6 +153,13 @@ def transform_and_fit_gridsearch(
 
 
 if __name__ == '__main__':
+    
+    PROJECT_ROOT_PATH = get_project_root()
+    TRAIN_FILENAME = os.path.join(PROJECT_ROOT_PATH, 'data/interim/train_data_90_perc_value_v1_3.csv')
+    TEST_FILENAME = os.path.join(PROJECT_ROOT_PATH, 'data/interim/test_data_90_perc_value_v1_3.csv')
+    SCORES_DIR = os.path.join(PROJECT_ROOT_PATH,'reports/scores/')
+    SCORE_FILENAME = pd.to_datetime('today').strftime('%Y_%m_%d') + 'scores.csv'
+
     INDEPENDENT_VARS = ['item_price','day_of_week_0',
        'day_of_week_1', 'day_of_week_2', 'day_of_week_3', 'day_of_week_4',
        'day_of_week_5', 'day_of_week_6', 'month_of_year_1', 'month_of_year_2',
@@ -161,8 +170,7 @@ if __name__ == '__main__':
        'second_third_of_month', 'last_third_of_month']
     DEPENDENT_VAR = 'sales_qty'
     VALIDATION_SPLIT_DATE = '2018-01-01'
-    TRAIN_FILENAME = 'data/interim/train_data_90_perc_value_v1_3.csv'
-    train_data = load_data(get_project_root(), TRAIN_FILENAME)
+    train_data = load_data(TRAIN_FILENAME)
 
     cols = ['estimator', 'train_from', 'train_to', 'val_from', 
             'val_to', 'train_wmape', 'val_wmape', 'features_coefs']

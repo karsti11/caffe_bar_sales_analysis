@@ -1,6 +1,9 @@
 import pandas as pd
+from src.features.calendar import easter_dates, easter_monday_dates
 
-def fill_time_series(raw_data_df: pd.DataFrame) -> pd.DataFrame:
+def fill_time_series(
+    raw_data_df: pd.DataFrame
+    ) -> pd.DataFrame:
     """Fills data for missing dates in raw dataframe per item. 
     Dataframe must have daily DatetimeIndex.
     """
@@ -8,7 +11,9 @@ def fill_time_series(raw_data_df: pd.DataFrame) -> pd.DataFrame:
     data_df.item_price = data_df.item_price.ffill().bfill()
     return data_df
 
-def add_features_to_raw_data(raw_data_df: pd.DataFrame) -> pd.DataFrame:
+def add_calendar_features(
+    raw_data_df: pd.DataFrame
+    ) -> pd.DataFrame:
 
     """Adds calendar features to raw dataframe(days of week, month of year, 
     year, thirds of month). Dataframe must have daily DatetimeIndex.
@@ -27,3 +32,20 @@ def add_features_to_raw_data(raw_data_df: pd.DataFrame) -> pd.DataFrame:
     transformed_data_df.drop(columns=['day_of_week', 'month_of_year'], inplace=True)
 
     return transformed_data_df
+
+def add_holidays_features(
+    data_df: pd.DataFrame
+    ) -> pd.DataFrame:
+    """Add easter and easter monday dummy variables. 
+    DataFrame must have DatetimeIndex.
+    """
+
+    data_df.loc[:, 'easter'] = data_df.index.isin(easter_dates).astype('int8')
+    data_df.loc[:, 'easter_monday'] = data_df.index.isin(easter_monday_dates).astype('int8')
+    data_df.loc[:, 'christmas'] = ((data_df.index.month==12) & (data_df.index.day==25)).astype('int8')
+    data_df.loc[:, 'new_years_day'] = ((data_df.index.month==1) & (data_df.index.day==1)).astype('int8')
+    data_df.loc[:, 'new_years_eve'] = ((data_df.index.month==12) & (data_df.index.day==31)).astype('int8')
+    
+    return data_df
+
+#def add_special_events(data_df: pd.DataFrame) -> pd.DataFrame:
