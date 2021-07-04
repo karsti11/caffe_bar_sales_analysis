@@ -172,8 +172,7 @@ if __name__ == '__main__':
     VALIDATION_SPLIT_DATE = '2018-01-01'
     train_data = load_data(TRAIN_FILENAME)
 
-    cols = ['estimator', 'train_from', 'train_to', 'val_from', 
-            'val_to', 'train_wmape', 'val_wmape', 'features_coefs']
+    cols = ['estimator', 'train_from', 'train_to', 'train_wmape', 'features_coefs']
     metrics_df = pd.DataFrame(columns=cols)
     train_data.item_name.unique().tolist()
 
@@ -182,3 +181,5 @@ if __name__ == '__main__':
         if raw_data_df.index.max() > pd.to_datetime(VALIDATION_SPLIT_DATE, utc=True):
             metrics_dict = transform_and_fit_gridsearch(raw_data_df, INDEPENDENT_VARS, DEPENDENT_VAR, VALIDATION_SPLIT_DATE, visualize=False)
             metrics_df = metrics_df.append(metrics_dict, ignore_index=True)
+
+    print(metrics_df)

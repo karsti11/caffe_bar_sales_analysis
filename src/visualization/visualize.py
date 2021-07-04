@@ -1,7 +1,7 @@
 import pandas as pd
 import plotly.graph_objects as go
 from matplotlib import pyplot as plt
-from statsmodels.graphics.tsaplots import plot_acf
+from statsmodels.graphics.tsaplots import plot_pacf
 
 
 def visualize_seasonality(
@@ -64,51 +64,49 @@ def plot_fit_and_residuals(
     fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(
         nrows=3, 
         ncols=2, 
-        gridspec_kw= {'hspace': 0.6}, 
-        figsize=(30,20))
+        gridspec_kw= {'hspace': 0.3}, 
+        figsize=(30,30))
 
     train_sales.plot(
         kind='line', 
         title='Actual sales (train set)', 
         xlabel='Date', 
         ylabel='Sales (pcs)',
-        fontsize=16,
         ax=ax1)
     train_predictions.plot(
         kind='line',
-        fontsize=16, 
         ax=ax1)
     test_sales.plot(
         kind='line', 
         title='Actual sales (test set)', 
         xlabel='Date', 
         ylabel='Sales (pcs)',
-        fontsize=16, 
         ax=ax2)
     test_predictions.plot(
         kind='line',
-        fontsize=16, 
         ax=ax2)
     ax3.scatter(
-        train_residuals, 
-        train_predictions)
-    ax3.set_title("Train set residuals plot", size=16)
-    ax3.set_xlabel("Predictions", fontsize = 16)
-    ax3.set_ylabel("Actual - Predictions", fontsize = 16)
+        train_predictions,
+        train_residuals
+        )
+    ax3.set_title("Train set residuals plot")
+    ax3.set_xlabel("Predictions")
+    ax3.set_ylabel("Actual - Predictions")
     ax4.scatter(
-        test_residuals, 
-        test_predictions)
-    ax4.set_title("Test set residuals plot", size=16)
-    ax4.set_xlabel("Predictions", fontsize = 16)
-    ax4.set_ylabel("Actual - Predictions", fontsize = 16)
+        test_predictions,
+        test_residuals
+        )
+    ax4.set_title("Test set residuals plot")
+    ax4.set_xlabel("Predictions")
+    ax4.set_ylabel("Actual - Predictions")
     
     features_coefs.plot(
         kind='barh', 
         title='Features coefficients',
-        fontsize=16, 
         ax=ax5)
-    plot_acf(
+    plot_pacf(
         train_sales, 
+        lags=60,
         ax=ax6)
     plt.show()
     
