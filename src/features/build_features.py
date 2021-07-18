@@ -21,8 +21,8 @@ def add_calendar_features(
     transformed_data_df = raw_data_df.copy()
     transformed_data_df.loc[:,'day_of_week'] = transformed_data_df.index.day_of_week
     transformed_data_df.loc[:,'month_of_year'] = transformed_data_df.index.month
-    day_of_week_dummies = pd.get_dummies(transformed_data_df.day_of_week, prefix='day_of_week')
-    month_of_year_dummies = pd.get_dummies(transformed_data_df.month_of_year, prefix='month_of_year')
+    day_of_week_dummies = pd.get_dummies(transformed_data_df.day_of_week, prefix='day_of_week', drop_first=True)
+    month_of_year_dummies = pd.get_dummies(transformed_data_df.month_of_year, prefix='month_of_year', drop_first=True)
     transformed_data_df = transformed_data_df.merge(day_of_week_dummies, how='left', left_index=True, right_index=True)
     transformed_data_df = transformed_data_df.merge(month_of_year_dummies, how='left', left_index=True, right_index=True)
     transformed_data_df.loc[:,'year'] = transformed_data_df.index.year - transformed_data_df.index.year.min()
