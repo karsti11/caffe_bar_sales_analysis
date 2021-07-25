@@ -3,13 +3,12 @@ import itertools
 
 def split_dataset(all_data_df: pd.DataFrame, 
                   test_split_date: str, 
-                  independent_vars: list, 
                   dependent_var: str):
     """Split dataset by date. 
     First date of test is test_split_date.
     """
-    X_train = all_data_df[all_data_df.index < pd.to_datetime(test_split_date, utc=True)][independent_vars].copy()
-    X_test = all_data_df[all_data_df.index >= pd.to_datetime(test_split_date, utc=True)][independent_vars].copy()
+    X_train = all_data_df[all_data_df.index < pd.to_datetime(test_split_date, utc=True)].drop(dependent_var, axis=1).copy()
+    X_test = all_data_df[all_data_df.index >= pd.to_datetime(test_split_date, utc=True)].drop(dependent_var, axis=1).copy()
     y_train = all_data_df[all_data_df.index < pd.to_datetime(test_split_date, utc=True)][dependent_var].copy()
     y_test = all_data_df[all_data_df.index >= pd.to_datetime(test_split_date, utc=True)][dependent_var].copy()
     print(f"Train dataset is from {X_train.index.min().strftime('%Y-%m-%d')} to {X_train.index.max().strftime('%Y-%m-%d')}")
@@ -18,7 +17,8 @@ def split_dataset(all_data_df: pd.DataFrame,
 
 def time_series_cv(raw_data_filled_df, num_train_years):
     """Custom time-series split in train-validation sets per year.
-    Dataset is split depending on 'num_train_years', 
+    Dataset is split depending on 'num_train_years', which is maximum
+    number of years in training dataset.
     """
     groups = raw_data_filled_df.reset_index().groupby(raw_data_filled_df.index.year).groups
     sorted_groups = [value.tolist() for (key, value) in sorted(groups.items())]#list of indices per year
