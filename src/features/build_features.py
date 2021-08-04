@@ -23,16 +23,14 @@ class CalendarTransformer(BaseEstimator, TransformerMixin):
     def transform(self, X, y=None):
         X_ = X.copy() # creating a copy to avoid changes to original dataset
         X_.loc[:,'day_of_week'] = X_.index.day_of_week
-        X_.loc[:,'month_of_year'] = X_.index.month
-        day_of_week_dummies = pd.get_dummies(X_.day_of_week, prefix='day_of_week', drop_first=True)
-        month_of_year_dummies = pd.get_dummies(X_.month_of_year, prefix='month_of_year', drop_first=True)
-        X_ = X_.merge(day_of_week_dummies, how='left', left_index=True, right_index=True)
-        X_ = X_.merge(month_of_year_dummies, how='left', left_index=True, right_index=True)
+        for day in range(1,7):
+            X_.loc[:, f'day_of_week_{day}'] = (X_.index.day_of_week == day).astype('int8')
+        for month in range(1,12):
+            X_.loc[:, f'month_of_year_{month}'] = (X_.index.month == month).astype('int8')
         X_.loc[:,'year'] = X_.index.year - X_.index.year.min()
         X_.loc[:,'first_third_of_month'] = (X_.index.day <= 10).astype('int8')
         X_.loc[:,'second_third_of_month'] = ((X_.index.day > 10) & (X_.index.day <= 20)).astype('int8')
         X_.loc[:,'last_third_of_month'] = (X_.index.day > 20).astype('int8')
-        X_.drop(columns=['day_of_week', 'month_of_year'], inplace=True)
 
         return X_
 

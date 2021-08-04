@@ -90,7 +90,7 @@ def transform_and_fit(
     
 def transform_and_fit_gridsearch(
     raw_data_df: pd.DataFrame, 
-    independent_vars: list, 
+    #independent_vars: list, 
     dependent_var: str, 
     validation_split_date: str,
     visualize: bool):
@@ -118,7 +118,7 @@ def transform_and_fit_gridsearch(
     #dataset_df = add_calendar_features(data_filled)
     #dataset_df = add_holidays_features(dataset_df)
     X_train, X_test, y_train, y_test = split_dataset(data_filled, validation_split_date, dependent_var)
-    cv_split_idxs = time_series_cv(X_train, num_train_years=3)
+    cv_split_idxs = time_series_cv(X_train, num_train_years=3, percentage_cut=0.8)
     wmape_scorer = make_scorer(wmape, greater_is_better=False)
     grid_search_params = {'regressor__alpha': [0.01, 0.1, 1.0, 10, 100]}
     pipeline = Pipeline(steps=[
@@ -177,13 +177,6 @@ if __name__ == '__main__':
     TEST_FILENAME = os.path.join(PROJECT_ROOT_PATH, 'data/interim/test_data_90_perc_value_v1_3.csv')
     SCORES_DIR = os.path.join(PROJECT_ROOT_PATH,'reports/scores/')
     SCORE_FILENAME = pd.to_datetime('today').strftime('%Y_%m_%d') + 'scores.csv'
-
-    INDEPENDENT_VARS = ['item_price', 'day_of_week_1', 'day_of_week_2', 'day_of_week_3', 
-                        'day_of_week_4', 'day_of_week_5', 'day_of_week_6', 'month_of_year_2', 
-                        'month_of_year_3', 'month_of_year_4', 'month_of_year_5', 'month_of_year_6', 
-                        'month_of_year_7', 'month_of_year_8', 'month_of_year_9', 'month_of_year_10', 
-                        'month_of_year_11', 'month_of_year_12', 'year', 'first_third_of_month', 
-                        'second_third_of_month', 'last_third_of_month']
     DEPENDENT_VAR = 'sales_qty'
     VALIDATION_SPLIT_DATE = '2018-01-01'
     train_data = load_data(TRAIN_FILENAME)
@@ -195,5 +188,5 @@ if __name__ == '__main__':
     for item in train_data.item_name.unique().tolist():
         raw_data_df = train_data[train_data.item_name == item].copy()
         if raw_data_df.index.max() > pd.to_datetime(VALIDATION_SPLIT_DATE, utc=True):
-            metrics_dict = transform_and_fit_gridsearch(raw_data_df, INDEPENDENT_VARS, DEPENDENT_VAR, VALIDATION_SPLIT_DATE, visualize=False)
+            metrics_dict = transform_and_fit_gridsearch(raw_data_df, DEPENDENT_VAR, VALIDATION_SPLIT_DATE, visualize=False)
             metrics_df = metrics_df.append(metrics_dict, ignore_index=True)
