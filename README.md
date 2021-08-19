@@ -3,6 +3,13 @@ caffe_bar_sales_analysis
 
 Project for figuring out the possible ways in which machine learning can benefit the drinks retail sales.
 
+Initial dataset is generated with src/data/make_dataset.py script. 
+Following pie charts offer visualisation of most important items from dataset by overall sales value and
+overall sales quantity.
+
+![alt text](images/pie_charts.png)
+
+
 Project Organization
 ------------
 
