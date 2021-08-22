@@ -7,9 +7,9 @@ Initial dataset is generated with src/data/make_dataset.py script.
 Following pie charts offer visualisation of most important items from dataset by overall sales value and
 overall sales quantity.
 
-![alt text](images/pie_chart_1.png)
+![alt text](images/pie_chart_1.PNG)
 
-![alt text](images/pie_chart_2.png)
+![alt text](images/pie_chart_2.PNG)
 
 
 Project Organization
