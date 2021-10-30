@@ -11,6 +11,11 @@ overall sales quantity.
 
 ![alt text](images/pie_chart_2.PNG)
 
+Judging by coverage in days, different approaches should be taken into consideration when creating ML models,
+such as custom time series split. Also significant number of items which stopped selling can be observed in countplot.
+
+![alt text](images/days_coverage.png)
+
 
 Project Organization
 ------------
