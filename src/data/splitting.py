@@ -15,16 +15,25 @@ def split_dataset(all_data_df: pd.DataFrame,
     print(f"Test dataset is from {X_test.index.min().strftime('%Y-%m-%d')} to {X_test.index.max().strftime('%Y-%m-%d')}")
     return X_train, X_test, y_train, y_test
 
-def time_series_cv(raw_data_filled_df, num_train_years):
+def time_series_cv(raw_data_filled_df, num_train_years, percentage_cut):
     """Custom time-series split in train-validation sets per year.
     Dataset is split depending on 'num_train_years', which is maximum
     number of years in training dataset.
+    :param percentage_cut: which percentage of dataset to use for training on when there
+                            is not much data
     """
     groups = raw_data_filled_df.reset_index().groupby(raw_data_filled_df.index.year).groups
     sorted_groups = [value.tolist() for (key, value) in sorted(groups.items())]#list of indices per year
-    if len(groups.keys()) < 2:
-        raise ValueError("Not enough groups for validation set.")
-    elif len(groups.keys()) <= num_train_years+1:
+    print(f"Groups: {groups.keys()}")
+    if len(groups.keys()) < num_train_years:
+        cut_idx = int(sorted_groups[-1][-1]*percentage_cut)
+        val_cut_idx = int(sorted_groups[-1][-1]*(percentage_cut+(1-percentage_cut)/2))
+        print(cut_idx)
+        print(val_cut_idx)
+        all_indices = list(itertools.chain(*sorted_groups))
+        return [(all_indices[:cut_idx], all_indices[cut_idx:val_cut_idx]), 
+                (all_indices[:val_cut_idx], all_indices[val_cut_idx:])]
+    elif len(groups.keys()) in (num_train_years, num_train_years+1):
         return [(list(itertools.chain(*sorted_groups[:-1])), sorted_groups[-1])]
     else:
         return [(list(itertools.chain(*sorted_groups[i:num_train_years+i])), sorted_groups[i+num_train_years])

@@ -12,6 +12,7 @@ from src.evaluation.metrics import wmape
 from src.data.splitting import split_dataset, time_series_cv
 from src.visualization.visualize import plot_fit_and_residuals
 from src.utils import get_project_root
+from src.data.make_dataset import load_dataset
 
 
 class PositiveOnlyRidge(Ridge):
@@ -179,7 +180,7 @@ if __name__ == '__main__':
     SCORE_FILENAME = pd.to_datetime('today').strftime('%Y_%m_%d') + 'scores.csv'
     DEPENDENT_VAR = 'sales_qty'
     VALIDATION_SPLIT_DATE = '2018-01-01'
-    train_data = load_data(TRAIN_FILENAME)
+    train_data = load_dataset()#load_data(TRAIN_FILENAME)
 
     cols = ['estimator', 'train_from', 'train_to', 'train_wmape', 'features_coefs']
     metrics_df = pd.DataFrame(columns=cols)
@@ -187,6 +188,7 @@ if __name__ == '__main__':
 
     for item in train_data.item_name.unique().tolist():
         raw_data_df = train_data[train_data.item_name == item].copy()
+        print(raw_data_df)
         if raw_data_df.index.max() > pd.to_datetime(VALIDATION_SPLIT_DATE, utc=True):
             metrics_dict = transform_and_fit_gridsearch(raw_data_df, DEPENDENT_VAR, VALIDATION_SPLIT_DATE, visualize=False)
             metrics_df = metrics_df.append(metrics_dict, ignore_index=True)
