@@ -4,12 +4,19 @@ caffe_bar_sales_analysis
 Project for figuring out the possible ways in which machine learning can benefit the drinks retail sales.
 
 Initial dataset is generated with src/data/make_dataset.py script. 
+
+
+### Items by sales value and quantity
+
 Following pie charts offer visualisation of most important items from dataset by overall sales value and
 overall sales quantity.
 
 ![alt text](images/pie_chart_1.PNG)
 
 ![alt text](images/pie_chart_2.PNG)
+
+
+### Dataset coverage
 
 Judging by coverage in days, different approaches should be taken into consideration when creating ML models,
 such as custom time series split. Also significant number of items which stopped selling can be observed in countplot.
