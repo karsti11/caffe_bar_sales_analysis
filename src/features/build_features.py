@@ -9,7 +9,7 @@ def fill_time_series(
     Dataframe must have daily DatetimeIndex.
     """
     data_df = raw_data_df.resample('D').sum()
-    data_df.item_price = data_df.item_price.ffill().bfill()
+    data_df.loc[:, 'item_price'] = data_df.item_price.replace(to_replace=0, method='ffill')
     return data_df
 
 
@@ -18,16 +18,21 @@ class CalendarTransformer(BaseEstimator, TransformerMixin):
         pass
 
     def fit(self, X, y=None):
+        self.min_year = X.index.year.min()
         return self
 
     def transform(self, X, y=None):
         X_ = X.copy() # creating a copy to avoid changes to original dataset
-        X_.loc[:,'day_of_week'] = X_.index.day_of_week
+        #X_.loc[:,'day_of_week'] = X_.index.day_of_week
+        if not isinstance(X_.index, pd.DatetimeIndex):
+            X_ = X_.set_index('sales_date')
+
         for day in range(1,7):
             X_.loc[:, f'day_of_week_{day}'] = (X_.index.day_of_week == day).astype('int8')
         for month in range(1,12):
             X_.loc[:, f'month_of_year_{month}'] = (X_.index.month == month).astype('int8')
-        X_.loc[:,'year'] = X_.index.year - X_.index.year.min()
+        # X_.index.year.min() should be generated during fit 
+        X_.loc[:,'year'] = X_.index.year - self.min_year
         X_.loc[:,'first_third_of_month'] = (X_.index.day <= 10).astype('int8')
         X_.loc[:,'second_third_of_month'] = ((X_.index.day > 10) & (X_.index.day <= 20)).astype('int8')
         X_.loc[:,'last_third_of_month'] = (X_.index.day > 20).astype('int8')
