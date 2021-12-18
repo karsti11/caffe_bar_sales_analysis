@@ -2,7 +2,7 @@ import os
 import time
 import pandas as pd
 from src.utils import get_project_root
-from item_names_replacement import REPLACE_DICT1, REPLACE_DICT1
+from src.data.item_names_replacement import REPLACE_DICT1, REPLACE_DICT1
 
 YEARS = [str(x) for x in list(range(2013,2021))]
 ROOT_DIR = get_project_root()
