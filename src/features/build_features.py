@@ -13,6 +13,18 @@ def fill_time_series(
     return data_df
 
 
+class MetadataTransformer(BaseEstimator, TransformerMixin):
+    def __init__(self, columns_to_drop=None):
+        self.columns_to_drop = columns_to_drop
+    def fit(self, X, y=None):
+        self.columns_to_drop = ['sales_value']
+        return self
+    def transform(self, X, y=None):
+        X_ = X.copy()
+        columns_to_keep = [col for col in X_.columns if col not in self.columns_to_drop]
+        X_ = X_[columns_to_keep]
+        return X_
+
 class CalendarTransformer(BaseEstimator, TransformerMixin):
     def __init__(self):
         pass
