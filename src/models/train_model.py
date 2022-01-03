@@ -108,7 +108,7 @@ def transform_and_fit_gridsearch(
         "test_to": X_test.index.max().strftime('%Y-%m-%d'),
         "train_wmape": errors_dict['train_wmape'],
         "test_wmape": errors_dict['test_wmape'],
-        "validation_wmape": lin_reg_gscv.best_score_,
+        "validation_wmape": abs(lin_reg_gscv.best_score_),
         "train_wbias": errors_dict['train_wbias'],
         "test_wbias": errors_dict['test_wbias'],
         "features_coefs": features_coefs,
