@@ -29,7 +29,8 @@ Because of low amounts of data for a large number of items, filtering is require
 which would actually generate useful predictions. With regards to a way of filtering, plenty of different methods can be applied.
 Initially in this example filtering is done with regards to the way in which data will be split.
 First date of test set is used so that if there is data before and after that date, means that there is data available for a model to train and test on.
-If the item fulfills this condition, model is built for it.
+If the item fulfills this condition, model is built for it. 
+Predictors used in this example contain information about day of week, month of year, thirds of a month, year, some holidays (Christmas, New Year's, Easter). 
 
 Data preparation, model selection and evaluation steps are:
 1. Fill time series data for an item in a way that dates with no sales (between first and last valid sales dates) are added and sales is set to zero
@@ -39,9 +40,17 @@ Data preparation, model selection and evaluation steps are:
 4. GridSearchCV fit is done
 5. Features coefficients, predictions and errors are calculated
 
-First glimpse at scores shows significant relationship between data sparsity and error metric.
+Total number of items left was 88.
+First glimpse at scores shows significant relationship between data sparsity and error metric. 
+Outliers on the high end of scores were removed for better visualisation (5/88 removed).
 
 ![alt text](images/sparsity_and_wmape.PNG)
+
+Scores distribution per dataset can be observed in the following boxplot (with removed outliers WMAPE < 500).
+Greater errors and their deviation can be observed in the upper boxplot (WMAPE) while in the lower boxplot of Weighted Bias error metric 
+positive bias can be observed which indicates overshooting forecast.
+
+![alt text](images/datasets_wmape_wbias.PNG)
 
 
 
