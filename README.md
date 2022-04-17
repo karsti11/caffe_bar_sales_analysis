@@ -47,11 +47,15 @@ Outliers on the high end of scores were removed for better visualisation (5/88 r
 ![alt text](images/sparsity_and_wmape.PNG)
 
 Scores distribution per dataset can be observed in the following boxplot (with removed outliers WMAPE < 500).
-Greater errors and their deviation can be observed in the upper boxplot (WMAPE) while in the lower boxplot of Weighted Bias error metric 
-positive bias can be observed which indicates overshooting forecast.
+Greater errors and their deviation for test set can be observed in the upper boxplot (WMAPE) while in the lower boxplot of Weighted Bias error metric, 
+positive bias can be observed which indicates overshooting forecast in the test set.
 
 ![alt text](images/datasets_wmape_wbias.PNG)
 
+*** Insert explanation for positive bias and greater error in test set (explore predicted amount and sold amount in test set)
+*** Investigate residuals for items with lower data sparsity 
+*** Address items with intermittent demand, should some less complex model be used(get rid of day of week features) or should they not be important, or should
+    there be some other method for dealing with it -> tried adding optional days of week, improvement non-significant
 
 
 Project Organization
