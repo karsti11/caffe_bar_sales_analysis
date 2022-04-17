@@ -1,10 +1,37 @@
-caffe_bar_sales_analysis
-==============================
+Caffe bar sales analysis and forecast
+
 
 Project for figuring out the possible ways in which machine learning can benefit the drinks retail sales.
+Initial dataset is generated with src/data/make_dataset.py script.
 
-Initial dataset is generated with src/data/make_dataset.py script. 
 
+In this project sales analysis and forecast has been done with real data of caffe bar closed in November 2020.
+Simple Streamlit app demonstrates a way in which sales forecast can be automated in caffe bar for proper replenishment.
+App can be run by two commands: 
+- change directory: "cd src/streamlit_app/"
+- run application: "streamlit run prediction_app.py"
+
+First step is to select dates and items as input to retrieve forecast.
+When those are selected, predictions are generated in total per item.
+
+![alt text](images/select_dates_and_items.PNG)
+
+By generating predictions, visualisation of those is automatically gained as an option.
+Check the checkbox and select item for visualisation in the given period.
+![alt text](images/visual_preds.PNG)
+
+Following are explainability visuals for given predictions.
+First one is used to visualise contributions of features for all predictions 
+(Number of dots on the graph = Number of features * Number of samples).
+![alt text](images/explain_preds.PNG)
+
+Second one is selection slider used to select and explain prediction for certain item on a certain date.
+
+![alt text](images/explain_preds_daily.PNG)
+
+
+Second part of project consists of data analysis and analysis of 
+predictions generated from Linear regression models which were built per item.
 
 ### Items by sales value and quantity
 
@@ -51,11 +78,6 @@ Greater errors and their deviation for test set can be observed in the upper box
 positive bias can be observed which indicates overshooting forecast in the test set.
 
 ![alt text](images/datasets_wmape_wbias.PNG)
-
-*** Insert explanation for positive bias and greater error in test set (explore predicted amount and sold amount in test set)
-*** Investigate residuals for items with lower data sparsity 
-*** Address items with intermittent demand, should some less complex model be used(get rid of day of week features) or should they not be important, or should
-    there be some other method for dealing with it -> tried adding optional days of week, improvement non-significant
 
 
 Project Organization
