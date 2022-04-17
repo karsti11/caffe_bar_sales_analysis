@@ -7,6 +7,7 @@ Initial dataset is generated with src/data/make_dataset.py script.
 
 In this project sales analysis and forecast has been done with real data of caffe bar closed in November 2020.
 Simple Streamlit app demonstrates a way in which sales forecast can be automated in caffe bar for proper replenishment.
+Machine learning model served in the background is Catboost.
 App can be run by two commands: 
 - change directory: "cd src/streamlit_app/"
 - run application: "streamlit run prediction_app.py"
