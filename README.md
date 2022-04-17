@@ -1,5 +1,4 @@
 # Caffe bar sales analysis and forecast
-=======================================
 
 
 Project for figuring out the possible ways in which machine learning can benefit the drinks retail sales.
